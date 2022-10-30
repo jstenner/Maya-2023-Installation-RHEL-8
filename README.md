@@ -1,99 +1,64 @@
-# Maya-2020-Installation-CentOS-8
+# Maya-2023-Installation-RHEL-8
 
 ## Autodesk Instructions Followed
-- [Install Maya on Linux using the rpm Package](https://knowledge.autodesk.com/support/maya/troubleshooting/caas/CloudHelp/cloudhelp/2020/ENU/Installation-Maya/files/GUID-E7E054E1-0E32-4B3C-88F9-BF820EB45BE5-htm.html)
-- [Installing Arnold for Maya on Linux](https://docs.arnoldrenderer.com/display/A5AFMUG/Installing+Arnold+for+Maya+on+Linux)
-- [Additional required Linux packages for Maya installation](https://knowledge.autodesk.com/support/maya/troubleshooting/caas/CloudHelp/cloudhelp/2020/ENU/Installation-Maya/files/GUID-D2B5433C-E0D2-421B-9BD8-24FED217FD7F-htm.html)
+- [Install Maya on Linux using the rpm Package](https://help.autodesk.com/view/MAYAUL/2023/ENU/?guid=GUID-E7E054E1-0E32-4B3C-88F9-BF820EB45BE5)
+- [Additional required Linux packages for Maya installation](https://help.autodesk.com/view/MAYAUL/2023/ENU/?guid=GUID-D2B5433C-E0D2-421B-9BD8-24FED217FD7F)
 
 ## Steps Attempted for Installation
-1. Start with fresh CentOS 8 installation
+1. Start with fresh RHEL 8 Workstation installation
 2. Run:
 ```bash
 sudo dnf update
-```
-3. Download MtoA / Arnold for Maya 2020 from [the official downloads page](https://www.arnoldrenderer.com/arnold/download/)
-
-The downloaded file is named: 
-```
-MtoA-4.0.3.1-linux-2020.run
-```
-
-Its SHA256 checksum is:
-```
-5159d4bc5218d042a0cb227d287d77c28750f16d87e74e6da8d11ed454c9be15
-```
-4. Attempt to install Arnold for Maya 2020
-```bash
-[brenden@errmac Software]$ sudo sh MtoA-4.0.3.1-linux-2020.run 
-Verifying archive integrity... All good.
-Uncompressing MtoA for Linux Installer......
-./unix_installer.sh: line 1: python: command not found
-[brenden@errmac Software]$ which python
-/usr/bin/which: no python in (/home/brenden/.local/bin:/home/brenden/bin:/home/brenden/.local/bin:/home/brenden/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin)
-[brenden@errmac Software]$ which python3
-/usr/bin/python3
-[brenden@errmac Software]$ python3 --version
-Python 3.6.8
-```
-
-This failed because Arnold for Maya 2020 is still using `python` 2.x which is EOL and not present on CentOS8.
-
-Skipping Arnold installation and moving along.
-
-5. Download Autodesk Maya 2020 Installer
+`
+3. Download Autodesk Maya 2023 Installer
 The downloaded file is named:
 ```
-Autodesk_Maya_2020_ML_Linux_64bit.tgz
-``` 
-
-Its SHA256 checksum is:
-```
-715260696f7cc626265a4ca53f86abbb3edce8e531866b7c35508408f3554335
+Autodesk_Maya_2023_ML_Linux_64bit.tar
 ```
 
-6. Extract the Installer
+4. Extract the Installer
 ```bash
-tar xvf Autodesk_Maya_2020_ML_Linux_64bit.tgz
+tar xvf Autodesk_Maya_2023_ML_Linux_64bit.tar
 
 #lines removed for brevity
 
 [brenden@errmac Maya]$ ls
-Autodesk_Maya_2020_ML_Linux_64bit.tgz  manifest  MayaConfig.pit  ODIS  Packages  Setup  SetupRes  setup.xml
+manifest  MayaConfig.pit  ODIS  Packages  Setup  SetupRes  setup.xml
 
 cd Packages
 ```
 
-7. Install ADLM
+5. Install ADLM
 ```
-sudo yum install adlmapps17-17.0.49-0.x86_64.rpm
+sudo yum install adlmapps25-25.0.3-0.x86_64.rpm
 ```
 
-8. Install ADSK Licensing 
+6. Install ADSK Licensing 
 ```
-sudo yum install adsklicensing9.2.1.2399-0-0.x86_64.rpm
+sudo yum install adsklicensing12.0.0.6537-0-0.x86_64.rpm
 ```
 
 This installs and configures a `systemd` service as seen below:
 ![adsklicensing systemd service screenshot](https://github.com/bxbrenden/Maya-2020-Installation-CentOS-8/blob/master/adsklicensing.png)
 
-9. Install ADLM Flexnet IPV6 Server
+7. Install ADLM Flexnet IPV6 Server
 ```bash
-sudo yum install adlmflexnetserverIPV6-17.0.50-0.x86_64.rpm
+sudo yum install adskflexnetserverIPV6-11.18.0-0.x86_64.rpm
 ```
 
-10. Install ADLM Flexnet Client
+8. Install ADLM Flexnet Client
 ```bash
-sudo yum install adlmflexnetclient-17.0.49-0.x86_64.rpm
+sudo yum install adskflexnetclient-11.16.0-0.x86_64.rpm
 ```
 
-11. Install the Maya rpm
+9. Install the Maya rpm
 ```bash
-sudo yum install Maya2020_64-2020.0-235.x86_64.rpm
+sudo yum install Maya2023_64-2023.0-1319.x86_64.rpm
 ```
 
-12. Verify Maya installation
+10. Verify Maya installation
 ```bash
-[brenden@errmac Packages]$ /opt/Autodesk/AdskLicensing/9.2.1.2399/helper/AdskLicensingInstHelper list
+[brenden@errmac Packages]$ /opt/Autodesk/AdskLicensing/Current/helper/AdskLicensingInstHelper list
 [
   {
     "feature_id": "MAYA",
@@ -117,7 +82,7 @@ sudo yum install Maya2020_64-2020.0-235.x86_64.rpm
 ]
 ```
 
-13. Install Dependencies
+11. Install Dependencies
 ```bash
 sudo yum install xorg-x11-fonts-ISO8859-1-100dpi
 sudo yum install xorg-x11-fonts-ISO8859-1-75dpi 
@@ -126,57 +91,37 @@ sudo dnf makecache
 sudo yum install audiofile audiofile-devel
 ```
 
-13. Attempt to start Maya
+12. Attempt to start Maya
 
 Run fails due to missing `libpng15.so.15`.
 ```bash
 [brenden@errmac Packages]$ which maya
 /usr/local/bin/maya
 [brenden@errmac Packages]$ maya
-/usr/autodesk/maya2020/bin/maya.bin: error while loading shared libraries: libpng15.so.15: cannot open shared object file: No such file or directory
+/usr/autodesk/maya2023/bin/maya.bin: error while loading shared libraries: libpng15.so.15: cannot open shared object file: No such file or directory
 ```
 
-14. Install libpng15.so.15 and try to start Maya
+13. Install libpng15.so.15 and try to start Maya
 
 Run fails due to missing `libGLU.so.1`
 ```bash
 [brenden@errmac Packages]$ sudo yum install libpng15-1.5.30-7.el8.x86_64
 
 [brenden@errmac Packages]$ maya
-/usr/autodesk/maya2020/bin/maya.bin: error while loading shared libraries: libGLU.so.1: cannot open shared object file: No such file or directory
+/usr/autodesk/maya2023/bin/maya.bin: error while loading shared libraries: libGLU.so.1: cannot open shared object file: No such file or directory
 ```
 
-15. Install libGLU and try to start Maya
+14. Install libGLU and try to start Maya
 
-Run fails due to missing `libssl.so.10`
-```bash
-[brenden@errmac Packages]$ sudo yum install libpng15-1.5.30-7.el8.x86_64
-
-[brenden@errmac Packages]$ maya
-/usr/autodesk/maya2020/bin/maya.bin: error while loading shared libraries: libssl.so.10: cannot open shared object file: No such file or directory
-```
-
-16. Install libssl and try to start Maya
-
-Run fails due to missing `libXp.so.6`
-```bash
-[brenden@errmac Packages]$ sudo yum install compat-openssl10-1:1.0.2o-3.el8.x86_64
-
-[brenden@errmac Packages]$ maya
-/usr/autodesk/maya2020/bin/maya.bin: error while loading shared libraries: libXp.so.6: cannot open shared object file: No such file or directory
-```
-
-17. Install libXp and try to start Maya
+[brenden@errmac Packages]$ sudo yum install mesa-libGLU
 
 Maya installation wizard starts this time!
-```bash
-[brenden@errmac Packages]$ sudo yum install libXp-1.0.3-3.el8.x86_64
 
 [brenden@errmac Packages]$ maya
 ```
 ![Maya starts after installing dependencies](https://github.com/bxbrenden/Maya-2020-Installation-CentOS-8/blob/master/maya-starts.png)
 
-18. Click `Single-User` to register license
+15. Click `Single-User` to register license (interface different in Maya 2023...but same idea!)
 
 Maya crashes with an error:
 ```bash
@@ -187,7 +132,7 @@ adlsdkAuthorize returned with error code: ADLSDK_STATUS_LICENSE_CHECKOUT_ERROR
 The default location for log files to help diagnose the issue is: /usr/tmp
 ```
 
-19. Check logs for failure details
+16. Check logs for failure details (log name differend in Maya 2023)
 
 Contents of `/usr/tmp/MayaCLM-25-06-2020.log`:
 ```
@@ -208,7 +153,7 @@ Contents of `/usr/tmp/MayaCLM-25-06-2020.log`:
 2020-06-25 17:45:27: INFO: shutdown: normal exit
 ```
 
-20. Click `enter a serial number` to try alternate route
+17. Click `enter a serial number` to try alternate route
 
 Clicked `enter a serial number` and got an error:
 ```
@@ -218,14 +163,14 @@ Error Code: <20>
 ```
 ![adlm init error](https://github.com/bxbrenden/Maya-2020-Installation-CentOS-8/blob/master/adlm-failed-init.png)
 
-21. Read troubleshooting steps from Autodesk Forums
+18. Read troubleshooting steps from Autodesk Forums
 https://forums.autodesk.com/t5/installation-licensing/maya-2020-centos-7-7-unable-to-initialize-adlm/td-p/9223338
 
-22. Try manual installation of Flexnet toolkit
+19. Try manual installation of Flexnet toolkit
 
 Running the two scripts suggested in the [forum post](https://forums.autodesk.com/t5/installation-licensing/maya-2020-centos-7-7-unable-to-initialize-adlm/td-p/9223338) seems to indicate the Flexnet service is not running:
 ```bash
-[brenden@errmac bin]$ sudo /opt/Autodesk/Adlm/FLEXnet/bin/toolkitinstall.sh
+[brenden@errmac bin]$ sudo /opt/Autodesk/Adlm/FLEXnet/11.16.0.0/bin/toolkitinstall.sh
 
 Checking system...
 Configuring for Linux, Trusted Storage path /usr/local/share/macrovision/storage...
@@ -238,13 +183,13 @@ Configuration completed successfully.
 ERROR: Unable to locate anchor service to install, please specify correctly on command line
 ```
 
-23. Try to run Flexnet service manually
+20. Try to run Flexnet service manually
 Running the service returns the confusing error 'No such file or directory` even though it exists.
 
 This [StackOverflow post](https://stackoverflow.com/questions/2716702/no-such-file-or-directory-error-when-executing-a-binary) indicates there may be missing libraries.
 ```bash
 [brenden@errmac bin]$ pwd
-/opt/Autodesk/Adlm/FLEXnet/bin
+/opt/Autodesk/Adlm/FLEXnet/11.16.0.0/bin
 [brenden@errmac bin]$ ls
 FNPLicensingService  install_fnp.sh  toolkitinstall.sh
 [brenden@errmac bin]$ sudo ./FNPLicensingService 
@@ -253,7 +198,7 @@ sudo: unable to execute ./FNPLicensingService: No such file or directory
 FNPLicensingService: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-lsb-x86-64.so.3, for GNU/Linux 2.6.18, stripped
 ```
 
-24. Try to find missing libraries
+21. Try to find missing libraries
 Using the `readelf -a` command and grepping (ignore case) for `request` finds that the `ld-lsb-x86-64.so.3` file is missing.
 ```bash
 [brenden@errmac bin]$ readelf -a FNPLicensingService  | grep -i request
@@ -269,7 +214,7 @@ Matched from:
 Filename    : /lib64/ld-lsb-x86-64.so.3
 ```
 
-25. Install `redhat-lsb-core` and try again
+22. Install `redhat-lsb-core` and try again
 `FNPLicensingService` runs successfully!
 ```bash
 [brenden@errmac bin]$ sudo dnf install redhat-lsb-core-4.1-47.el8.x86_64
@@ -289,7 +234,7 @@ root       46841    6954  0 18:17 ?        00:00:00 ./FNPLicensingService -r
 brenden    46864   16926  0 18:17 pts/0    00:00:00 grep --color=auto -i fnp
 ```
 
-26. Try re-running Flexnet tools manually
+23. Try re-running Flexnet tools manually
 
 Running `sudo ./install_fnp.sh` still fails with the `missing anchor service` error. 
 
@@ -347,20 +292,23 @@ Checking FNPLicensingService is running
 Configuration completed successfully.
 ```
 
-27. Try clicking `enter a serial number` again
+24. Start Maya - mine crashed with error related to `dbus appears incorrectly setup`. Based on https://stackoverflow.com/questions/62711323/python3-gtk3-d-bus-library-appears-to-be-incorrectly-set-up-failed-to-read-ma one solution is to run:
+```sudo dbus-uuidgen --ensure```
+
+25. Start Maya again and try clicking `enter a serial number` (Maya 2023 interface is different)
 
 Clicking `enter a serial number` on the installation wizard now works!
 ![enter a serial number](https://github.com/bxbrenden/Maya-2020-Installation-CentOS-8/blob/master/enter-license-works.png)
 
-28. Enter a serial number at the activation page
+26. Enter a serial number at the activation page
 
 The page prompts you to activate Maya
 ![Maya activation page](https://github.com/bxbrenden/Maya-2020-Installation-CentOS-8/blob/master/license-activation.png)
 
-29. Activation is successful
+27. Activation is successful
 
 The wizard shows a success message. Click `Finish`
 ![](https://github.com/bxbrenden/Maya-2020-Installation-CentOS-8/blob/master/license-activated.png)
 
-30. Maya starts!
+28. Maya starts!
 ![Maya starts](https://github.com/bxbrenden/Maya-2020-Installation-CentOS-8/blob/master/maya-finally-starts.png)
